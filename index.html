@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ammar | Catalog Store & Teman Berproses</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --text-white: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.88);
+      --card-bg: rgba(255, 255, 255, 0.12);
+      --card-border: rgba(255, 255, 255, 0.25);
+      --btn-bg: #ffffff;
+      --btn-text: #6b46e5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(57.59deg, #505CE4 0%, #9049EB 64.46%);
+      color: var(--text-white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* SVG Animated Background Container */
+    .bg-svg-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.35;
+      overflow: hidden;
+    }
+
+    svg#cups {
+      width: 100%;
+      height: 100%;
+      max-width: 900px;
+      object-fit: cover;
+    }
+
+    /* Container Utama Responsif */
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 16px 80px;
+    }
+
+    /* 1. Hero Section & Animasi Swiped */
+    .hero-section {
+      text-align: center;
+      padding: 30px 15px;
+      margin-bottom: 40px;
+      animation: swipeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateX(-80px);
+    }
+
+    @keyframes swipeIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-80px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .profile-img-container {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-quote {
+      font-size: 1.05rem;
+      font-weight: 500;
+      line-height: 1.6;
+      max-width: 650px;
+      margin: 0 auto 22px;
+      color: var(--text-white);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .instagram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 26px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .instagram-btn i {
+  font-size: 1.3rem;
+  display: inline-block;
+
+  /* Latar belakang gradien */
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+
+  /* Versi standar & prefix agar tidak ada peringatan editor */
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  /* Warna teks transparan agar gradien terlihat */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+    .instagram-btn:hover {
+      background: rgba(255, 255, 255, 0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+
+    /* Section Title */
+    .catalog-title {
+      text-align: center;
+      font-size: 1.7rem;
+      margin-bottom: 30px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* 2. Grid Katalog Produk (Responsif Desktop & Smartphone) */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      perspective: 1000px;
+    }
+
+    /* Kartu Produk 3D Interaktif + Scroll Animasi In-Out */
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      cursor: pointer;
+
+      /* State Awal Scroll Out */
+      opacity: 0;
+      transform: translateY(50px) scale(0.9);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* State Aktif Scroll In */
+    .product-card.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Efek Tekanan 3D saat Diklik */
+    .product-card:active {
+      transform: scale(0.95) translateZ(-10px) !important;
+      transition: transform 0.1s ease !important;
+    }
+
+    .product-badge {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 4px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Bingkai Gambar Produk Auto-Fit */
+    .product-img-wrapper {
+      width: 100%;
+      height: 220px;
+      margin-bottom: 15px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateZ(30px);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Menyesuaikan gambar agar pas dan rapi tanpa terdistorsi */
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-img {
+      transform: scale(1.05);
+    }
+
+    .product-info {
+      transform: translateZ(20px);
+      margin-bottom: 18px;
+    }
+
+    .product-info h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .product-info p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .btn-buy {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      transform: translateZ(25px);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-buy:hover {
+      background: #ffffff;
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Media Queries untuk Perangkat Kecil (Smartphone) */
+    @media (max-width: 600px) {
+      .hero-quote {
+        font-size: 0.95rem;
+      }
+      .profile-img-container {
+        width: 110px;
+        height: 110px;
+      }
+      .product-img-wrapper {
+        height: 200px;
+      }
+      .container {
+        padding-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Latar Belakang SVG Animated Morphing -->
+  <div class="bg-svg-wrapper">
+    <svg id="cups" width="820" height="999" viewBox="0 0 820 999" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path id="simple" d="M683.71 170.348C720.791 258.272 703.124 355.204 725.256 449.591C747.195 544.173 808.932 636.405 801.361 724.525C793.789 812.645 717.102 896.849 626.243 921.131C535.384 945.413 430.546 909.773 367.256 847.893C303.771 786.209 282.027 698.089 209.805 617.41C137.584 536.536 14.885 463.298 1.29495 386.536C-12.2951 309.773 83.4177 229.682 178.742 151.941C274.067 74.1992 368.809 -1.19239 461.998 0.96166C555.187 2.91988 646.822 82.2279 683.71 170.348Z" fill-rule="nonzero" fill="url(#paint0_linear)"/>
+      <path opacity="0" id="fancy" d="M635.709 144.348C672.791 232.272 655.124 329.204 677.256 423.591C699.194 518.173 760.932 610.405 753.36 698.525C745.789 786.645 674.859 824.718 584 849C493.141 873.282 390.291 856.88 327 795C263.515 733.316 234.026 708.679 161.805 628C89.5837 547.125 15.59 427.262 2 350.5C-11.5901 273.738 66.4806 193.741 161.805 116C257.13 38.2585 366.811 -1.15405 460 1C553.189 2.95822 598.822 56.2279 635.709 144.348Z" fill-rule="nonzero" fill="url(#paint0_linear)"/>
+      <defs>
+        <linearGradient id="paint0_linear" x1="226.558" y1="-25.0836" x2="-376.988" y2="330.205" gradientUnits="userSpaceOnUse">
+          <stop stop-color="white" stop-opacity="0.7"/>
+          <stop offset="0.811947" stop-color="white" stop-opacity="0.5"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="container">
+    
+    <!-- 1. Hero Section -->
+    <header class="hero-section">
+      <div class="profile-img-container">
+        <img src="foto-profil.jpg" alt="Foto Profil Ammar" class="profile-img">
+      </div>
+      <p class="hero-quote">
+        "Mulai aja dulu, berproses baru evaluasi , Hai aku Ammar teman berproses kamu meningkatkan diri"
+      </p>
+      <a href="https://www.instagram.com/mmr_haf/" target="_blank" rel="noopener noreferrer" class="instagram-btn">
+        <i class="fab fa-instagram"></i> Follow @mmr_haf
+      </a>
+    </header>
+
+    <!-- 2. Catalog Products Section -->
+    <main>
+      <h2 class="catalog-title">Rekomendasi Buku Pilihan</h2>
+
+      <div class="product-grid">
+
+        <!-- Produk 1 -->
+        <article class="product-card">
+          <span class="product-badge">Buku #1</span>
+          <div class="product-img-wrapper">
+            <img src="produk1.png" alt="Atomic Habits" class="product-img">
+          </div>
+          <div class="product-info">
+            <h3>Atomic Habits</h3>
+            <p>Perubahan Kecil yang Memberikan Hasil Luar Biasa. Cara Mudah dan Terbukti untuk Membentuk Kebiasaan Baik dan Menghilangkan Kebiasaan Buruk.</p>
+          </div>
+          <a href="https://s.shopee.co.id/8fRVIHdolE" target="_blank" rel="noopener noreferrer" class="btn-buy">
+            Lihat <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+
+        <!-- Produk 2 -->
+        <article class="product-card">
+          <span class="product-badge">Buku #2</span>
+          <div class="product-img-wrapper">
+            <img src="produk2.png" alt="Pocket Building 3 Buku" class="product-img">
+          </div>
+          <div class="product-info">
+            <h3>Pocket Building (3 Buku)</h3>
+            <p>Terdiri dari The Art of Stoicism, Power Yourself, dan Divine Timing untuk jiwa yang siap bertumbuh.</p>
+          </div>
+          <a href="https://s.shopee.co.id/5LB3Kg3Dum" target="_blank" rel="noopener noreferrer" class="btn-buy">
+           Lihat <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+
+        <!-- Produk 3 -->
+        <article class="product-card">
+          <span class="product-badge">Buku #3</span>
+          <div class="product-img-wrapper">
+            <img src="produk3.png" alt="Obat Minder" class="product-img">
+          </div>
+          <div class="product-info">
+            <h3>Obat Minder</h3>
+            <p>Rahasia menjadi pribadi percaya diri, berani tampil beda, dan dikagumi.</p>
+          </div>
+          <a href="https://s.shopee.co.id/LmNNL1Q63" target="_blank" rel="noopener noreferrer" class="btn-buy">
+            Lihat <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+
+        <!-- Produk 4 -->
+        <article class="product-card">
+          <span class="product-badge">Buku #4</span>
+          <div class="product-img-wrapper">
+            <img src="produk4.png" alt="Is It Bad or Good Habits" class="product-img">
+          </div>
+          <div class="product-info">
+            <h3>Is It Bad or Good Habits</h3>
+            <p>Membahas tentang proses berpikir manusia dan mengenali diri untuk melangkah dari kebiasaan kecil menuju kesuksesan.</p>
+          </div>
+          <a href="https://s.shopee.co.id/9zwssyOQ8d" target="_blank" rel="noopener noreferrer" class="btn-buy">
+            Lihat <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+
+        <!-- Produk 5 -->
+        <article class="product-card">
+          <span class="product-badge">Buku #5</span>
+          <div class="product-img-wrapper">
+            <img src="produk5.png" alt="Berani Berubah" class="product-img">
+          </div>
+          <div class="product-info">
+            <h3>Berani Berubah</h3>
+            <p>Untuk hidup yang lebih baik. Semuanya dimulai dari diri sendiri.</p>
+          </div>
+          <a href="https://s.shopee.co.id/7Kw7hykPj7" target="_blank" rel="noopener noreferrer" class="btn-buy">
+            Lihat <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+
+        <!-- Produk 6 -->
+        <article class="product-card">
+          <span class="product-badge">Buku #6</span>
+          <div class="product-img-wrapper">
+            <img src="produk6.png" alt="Berdamai dengan Rasa Malas" class="product-img">
+          </div>
+          <div class="product-info">
+            <h3>Berdamai dengan Rasa Malas</h3>
+            <p>Cara paling cepat mengubah kebiasaan malas menjadi super produktif dan disiplin.</p>
+          </div>
+          <a href="https://s.shopee.co.id/5fntiqZC7y" target="_blank" rel="noopener noreferrer" class="btn-buy">
+            Lihat <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Ammar - Teman Berproses Kamu.</p>
+    </footer>
+
+  </div>
+
+  <!-- CDN Snap.svg untuk Animasi Morphing SVG -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+
+  <script>
+    /* 1. Eksekusi Animasi SVG Morphing Background */
+    window.addEventListener('DOMContentLoaded', () => {
+      var svg = document.getElementById("cups");
+      if (typeof Snap !== "undefined" && svg) {
+        var s = Snap(svg);
+        var simple = Snap.select('#simple');
+        var fancy = Snap.select('#fancy');
+
+        if (simple && fancy) {
+          var simplePoints = simple.node.getAttribute('d');
+          var fancyPoints = fancy.node.getAttribute('d');
+
+          var toFancy = function(){
+            simple.animate({ d: fancyPoints }, 5000, mina.backout, toSimple);  
+          };
+
+          var toSimple = function(){
+            simple.animate({ d: simplePoints }, 5000, mina.backout, toFancy); 
+          };
+
+          toSimple();
+        }
+      }
+    });
+
+    /* 2. Logika Scroll Animasi In & Out (IntersectionObserver) */
+    const productCards = document.querySelectorAll('.product-card');
+
+    const observerOptions = {
+      root: null,
+      threshold: 0.15
+    };
+
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        } else {
+          entry.target.classList.remove('is-visible');
+        }
+      });
+    }, observerOptions);
+
+    productCards.forEach(card => cardObserver.observe(card));
+
+    /* 3. Interaktivitas Pergerakan 3D Tilt Effect pada Kartu Produk */
+    productCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 12;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+  </script>
+</body>
+</html>
